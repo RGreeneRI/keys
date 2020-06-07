@@ -6,24 +6,27 @@
 if [ "" == "$1" ]
 then
     echo ""
-    echo "You must specify the github username as an argument"
+    echo "For future reference:"
+    echo "You can specify the github username as an argument"
     echo "Example:  ./key-install.sh johnsmith"
     echo ""
-    exit 1
+    echo -e "Where \"johnsmith\" is a Github username..."
+    echo ""
+    echo ""
+    echo "Please type the Github username, then press ENTER."
+    read -p 'Github Username: ' GITHUB_USER
+    echo ""
 else
     echo ""
     echo "Working with Github user $1's public key."
     echo ""
+    ## Establish Github Username
+    GITHUB_USER="$1"
 fi
 
-## Establish Github Username
-GITHUB_USER="$1"
-
 ## Get SSH Public Key
-echo "Downloading Public Key."
+echo "Downloading Public Key for $GITHUB_USER."
 KEY=`wget -qO - https://github.com/$GITHUB_USER.keys`
-echo "Done."
-
 ## Check key isnt empty
 if [ "" == "$KEY" ]
 then
