@@ -1,7 +1,29 @@
 #!/bin/bash
 
-###  This script will add the public key of the specified github user  ###
-###  to the currently logged in linux user's authorized_keys file.     ###
+###  This script will add the public key of the specified github user   ###
+###  to the currently logged in linux/unix user's authorized_keys file. ###
+###  Tested with Ubuntu and macOS.                                      ###
+
+## Prerequsite Check
+DOWNLOADER="None"
+echo "Looking for wget"
+which wget
+if [ "$?" == "0" ]; then
+    DOWNLOADER="wget";
+    echo "Found it!"
+else
+echo "Looking for curl"
+which curl
+    if [ "$?" == "0" ]; then
+        DOWNLOADER="curl";
+        echo "Found it!"
+    fi
+fi
+
+if [ "$DOWNLOADER" == "None" ]; then
+    echo "You do not have wget or curl.  You need one of these to use this script.";
+    exit 1;
+fi
 
 if [ "" == "$1" ]
 then
@@ -26,7 +48,13 @@ fi
 
 ## Get SSH Public Key
 echo "Downloading Public Key for $GITHUB_USER."
+if [ "$DOWNLOADER" == "wget" ]; then
 KEY=`wget -qO - https://github.com/$GITHUB_USER.keys`
+fi
+if [ "$DOWNLOADER" == "curl" ]; then
+KEY=$(curl https://github.com/$GITHUB_USER.keys)
+fi
+
 ## Check key isnt empty
 if [ "" == "$KEY" ]
 then
