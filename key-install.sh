@@ -19,6 +19,28 @@ fi
 ## Establish Github Username
 GITHUB_USER="$1"
 
+## Get SSH Public Key
+echo "Downloading Public Key."
+KEY=`wget -qO - https://github.com/$GITHUB_USER.keys`
+echo "Done."
+
+## Check key isnt empty
+if [ "" == "$KEY" ]
+then
+    echo ""
+    echo "It appears $GITHUB_USER does not have a public key on github."
+    echo "NO KEY ADDED!"
+    echo ""
+    exit 1
+else
+    echo ""
+    echo "Github user $GITHUB_USER's public key is:"
+    echo "----------"
+    echo "$KEY"
+    echo "----------"
+    echo ""
+fi
+
 ## Check if ~/.ssh directory exists
 cd ~
 if [ ! -d ".ssh" ]
@@ -39,11 +61,6 @@ fi
 
 ## Change to ~/.ssh directory
 cd ~/.ssh
-
-## Get SSH Public Key
-echo "Downloading Public Key."
-KEY=`wget -qO - https://github.com/$GITHUB_USER.keys`
-echo "Done."
 
 ## chmod 600 the authorized_keys file
 echo "Securing the authorized_keys file."
