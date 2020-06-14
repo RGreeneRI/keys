@@ -4,6 +4,17 @@
 ###  to the currently logged in linux/unix user's authorized_keys file. ###
 ###  Tested with Ubuntu and macOS.                                      ###
 
+# Title
+cat <<'EOF'
+ _  __               ___           _        _ _
+| |/ /___ _   _     |_ _|_ __  ___| |_ __ _| | |
+| ' // _ \ | | |_____| || '_ \/ __| __/ _` | | |
+| . \  __/ |_| |_____| || | | \__ \ || (_| | | |
+|_|\_\___|\__, |    |___|_| |_|___/\__\__,_|_|_|
+          |___/
+
+EOF
+
 ## Prerequsite Check
 DOWNLOADER="None"
 echo "Looking for wget"
