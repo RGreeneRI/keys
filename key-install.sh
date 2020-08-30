@@ -85,6 +85,7 @@ fi
 
 ## Check if ~/.ssh directory exists
 cd ~
+echo "Checking to see if your ~/.ssh directory exists."
 if [ ! -d ".ssh" ]
 then
     ## Create the ~/.ssh directory if it doesnt exist, and chmod it to 700
@@ -93,29 +94,44 @@ then
     mkdir .ssh
     chmod 700 .ssh
     echo "Done."
+    echo ""
 else
     ## If the ~/.ssh directory does exist, chmod it to 700
     echo "Your .ssh directory already exists, making sure its secure."
     cd ~
     chmod 700 .ssh
     echo "Done."
+    echo ""
 fi
 
 ## Change to ~/.ssh directory
 cd ~/.ssh
 
 ## chmod 600 the authorized_keys file
-echo "Securing the authorized_keys file."
+echo "Creating (if it doesn't exist) and securing the authorized_keys file."
 touch authorized_keys
 chmod 600 authorized_keys
 echo "Done."
+echo ""
 
 ## Append to authorized_keys file
-echo "Adding key to authorized_keys file."
-echo "$KEY" >> authorized_keys
-echo "Done."
+echo "Checking to see if $GITHUB_USER's public key is already in authorized_keys file."
+grep -q "$KEY" authorized_keys
+if [ "$?" == "0" ]
+then
+    echo "$GITHUB_USER's public key is already in the authorized_keys file."
+    echo "Exiting."
+    exit 1
+else
+    echo "$GITHUB_USER's public key is not already in the authorized_keys file."
+    echo "Adding $GITHUB_USER's public key to authorized_keys file."
+    echo "$KEY" >> authorized_keys
+    echo "Done."
 
-echo ""
-echo "SSH key from Github user $GITHUB_USER has been added"
-echo "to the authorized_keys file for Linux user $USER"
-echo ""
+    echo ""
+    echo "SSH key from Github user $GITHUB_USER has been added"
+    echo "to the authorized_keys file for Linux user $USER"
+    echo ""
+fi
+
+exit 0
